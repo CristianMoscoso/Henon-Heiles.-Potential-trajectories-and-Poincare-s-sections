@@ -1,0 +1,101 @@
+#### Calculo de la sección de poincare
+
+def poincare_section(sol):
+  p_y = [] #poscision
+  p_py = [] #momentum
+  plt.figure( )
+
+  for t in range(N-1):
+    if sol[t,0]<0 and sol[t+1, 0]>0:
+      p_y.append(sol[t,1])
+      p_py.append(sol[t,3])
+  plt.scatter(p_y, p_py, marker=".", color="black", s=1)
+  plt.scatter(sol[0,1], sol[0,3], marker=".", color="crimson", s=1)
+  plt.xlabel(r"$y$")
+  plt.ylabel(r"$Py$")
+  plt.show()
+
+
+eta =  1
+x0 =  0.
+y0 =  0.
+dydt0 = 0.
+E =  1/6
+
+dxdt0 =  np.sqrt(2*E - dydt0**2 + (x0**2 + y0**2) - 2*eta*(x0**2*y0 - y0**3/3))
+
+values_initial =  [x0, y0, dxdt0, dydt0]
+
+t_fin = 100000
+N =  20*t_fin
+
+tt =  np.linspace(0, t_fin, N)
+sol = odeint(Hennon, values_initial, tt)
+poincare_section(sol)
+
+# Definimos la función de Henon-Heiles
+def Hennon(q, t):
+    dxdt = q[2]
+    dydt = q[3]
+    dpxdt = -q[0] - 2 * eta * q[0] * q[1]
+    dpydt = -q[1] - eta * q[0]**2 + eta * q[1]**2
+    return [dxdt, dydt, dpxdt, dpydt]
+
+# Función para calcular la sección de Poincaré
+def poincare_section(ax, sol):
+    p_y = []  # posición
+    p_py = []  # momentum
+
+    for t in range(N-1):
+        if sol[t, 0] < 0 and sol[t+1, 0] > 0:  # Cruzando el plano x = 0
+            p_y.append(sol[t, 1])
+            p_py.append(sol[t, 3])
+
+    ax.scatter(p_y, p_py, marker=".", color="black", s=1)
+    ax.scatter(sol[0, 1], sol[0, 3], marker=".", color="crimson", s=1)
+    ax.set_xlabel(r"$y$")
+    ax.set_ylabel(r"$Py$")
+
+# Parámetro eta
+eta = 1
+
+# Lista de valores de energía
+Energies = [1/12, 1/8, 1/6, 1/2]
+
+# Crear una figura con subgráficas
+fig, axes = plt.subplots(2, 2, figsize=(7, 6))
+
+# Iterar sobre los valores de energía y las subgráficas
+for i, E in enumerate(Energies):
+    x0 = 0.
+    y0 = 0.
+    dydt0 = 0.
+
+    try:
+        dxdt0 = np.sqrt(2 * E - dydt0**2 + (x0**2 + y0**2) - 2 * eta * (x0**2 * y0 - y0**3 / 3))
+    except ValueError as e:
+        print(f"Error al calcular dxdt0 para E={E}: {e}")
+        continue  # Saltar al siguiente valor de energía si ocurre un error
+
+    # Condiciones iniciales
+    values_initial = [x0, y0, dxdt0, dydt0]
+
+    # Tiempo de integración
+    t_fin = 80000
+    N = 20 * t_fin
+    tt = np.linspace(0, t_fin, N)
+
+    # Solución de la ODE
+    sol = odeint(Hennon, values_initial, tt)
+
+    # Graficar la sección de Poincaré en la subgráfica correspondiente
+    row = i // 2
+    col = i % 2
+    poincare_section(axes[row, col], sol)
+
+    # Título de la subgráfica
+    energy_fraction = Fraction(E).limit_denominator()
+    axes[row, col].set_title(f"E = {energy_fraction.numerator}/{energy_fraction.denominator}")
+
+plt.tight_layout()
+plt.show()
