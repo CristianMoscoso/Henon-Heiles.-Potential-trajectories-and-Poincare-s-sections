@@ -1,0 +1,36 @@
+levels = [E, E+0.001]
+fig, ax = plt.subplots()
+cs =  ax.contourf(X,Y,Z, levels, colors=["white"], extend="both")
+cs.cmap.set_over("white")
+cs.cmap.set_under("cornflowerblue")
+cs.changed()
+plt.title("Region donde el movimiento es posible")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$y$")
+plt.grid()
+plt.show()
+
+Energy = [1/12, 1/8, 1/6, 1/2]
+
+fig, ax = plt.subplots(2, 2, figsize=(5, 5))
+for i in range(4):
+    row = i // 2
+    col = i % 2
+
+    levels = [Energy[i], Energy[i]+0.001]
+    cs = ax[row, col].contourf(X, Y, Z, levels, colors=["white"], extend="both")
+    cs.cmap.set_over("white")
+    cs.cmap.set_under("blue")
+    cs.changed()
+
+    # Añadir etiquetas a cada subgráfico
+    ax[row, col].set_xlabel(r"$x$")
+    ax[row, col].set_ylabel(r"$y$")
+
+
+    energy_fraction = Fraction(Energy[i]).limit_denominator()
+    ax[row, col].set_title(f"E = {energy_fraction.numerator}/{energy_fraction.denominator}")
+
+
+plt.tight_layout()
+plt.show()
