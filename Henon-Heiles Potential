@@ -1,0 +1,23 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
+from scipy.integrate import odeint
+from fractions import Fraction
+
+def V(x,y):
+  return((x**2 + y**2)/2) + eta*((x**2)*y-y**3/3)
+
+eta =1
+xx =  np.linspace(-3,3,50)
+yy =  np.linspace(-3,3,50)
+
+X,Y = np.meshgrid(xx,yy)
+Z = V(X,Y)
+
+fig =  plt.figure()
+ax =  plt.axes(projection="3d")
+ax.plot_wireframe(X,Y,Z)
+ax.set_xlabel(r"$x$")
+ax.set_ylabel(r"$y$")
+ax.set_zlabel(r"$z$")
+plt.show()
