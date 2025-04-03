@@ -1,4 +1,4 @@
-# Definimos la función de Henon-Heiles
+# Henon-Heiles function
 def Hennon(q, t):
     dxdt = q[2]
     dydt = q[3]
@@ -6,7 +6,7 @@ def Hennon(q, t):
     dpydt = -q[1] - eta * q[0]**2 + eta * q[1]**2
     return [dxdt, dydt, dpxdt, dpydt]
 
-# Función para graficar la solución
+# Graph for the solution
 def grafica(ax, sol, E):
     ax.plot(sol[:, 0], sol[:, 1])
     ax.scatter(sol[0, 0], sol[0, 1], color="blue")
@@ -15,16 +15,15 @@ def grafica(ax, sol, E):
     energy_fraction = Fraction(E).limit_denominator()
     ax.set_title(f"E = {energy_fraction.numerator}/{energy_fraction.denominator}")
 
-# Parámetro eta
+# Eta parameter
 eta = 1
 
-# Lista de valores de energía
+# Energy values
 Energies = [1/12, 1/8, 1/6, 1/2]
 
-# Crear una figura con subgráficas
+
 fig, axes = plt.subplots(2, 2, figsize=(7, 6))
 
-# Iterar sobre los valores de energía y las subgráficas
 for i, E in enumerate(Energies):
     x0 = 0.
     y0 = 0.
@@ -34,20 +33,19 @@ for i, E in enumerate(Energies):
         dxdt0 = np.sqrt(2 * E - dydt0**2 + (x0**2 + y0**2) - 2 * eta * (x0**2 * y0 - y0**3 / 3))
     except ValueError as e:
         print(f"Error al calcular dxdt0 para E={E}: {e}")
-        continue  # Saltar al siguiente valor de energía si ocurre un error
+        continue  
 
-    # Condiciones iniciales
+    # Initial conditions
     values_initial = [x0, y0, dxdt0, dydt0]
 
-    # Tiempo de integración
+    # Integration time
     t_fin = 100
     N = 20 * t_fin
     tt = np.linspace(0, t_fin, N)
 
-    # Solución de la ODE
     sol = odeint(Hennon, values_initial, tt)
 
-    # Graficar en la subgráfica correspondiente
+    # Graph
     row = i // 2
     col = i % 2
     grafica(axes[row, col], sol, E)
