@@ -4,7 +4,7 @@ cs =  ax.contourf(X,Y,Z, levels, colors=["white"], extend="both")
 cs.cmap.set_over("white")
 cs.cmap.set_under("cornflowerblue")
 cs.changed()
-plt.title("Region donde el movimiento es posible")
+plt.title("Region where movement is possible")
 plt.xlabel(r"$x$")
 plt.ylabel(r"$y$")
 plt.grid()
@@ -23,7 +23,7 @@ for i in range(4):
     cs.cmap.set_under("blue")
     cs.changed()
 
-    # Añadir etiquetas a cada subgráfico
+
     ax[row, col].set_xlabel(r"$x$")
     ax[row, col].set_ylabel(r"$y$")
 
